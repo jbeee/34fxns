@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,user-scalable=no">
+<title>Untitled Document</title>
+
+
+<style>
+body,html{width:100%;height:100%;margin:0px; padding:0px;font-size:16px;}
+
+.stats
+{
+    font-size: 75px;
+    line-height:80px;
+    letter-spacing:-5px;
+    font-weight:bold;
+    color:#424242;
+    position:relative;
+    word-wrap:break-word;
+    width:90%;
+	margin:10px;
+    height:auto;
+}
+
+.tTest
+{
+	font-size: 16px;
+    letter-spacing:-1px;
+    font-weight:bold;
+    color:#424242;
+    position:relative;
+    word-wrap:break-word;
+    width:50%;
+	height:20%;
+	margin:10px;
+    height:auto;
+}
+#tTest2
+{
+	display:none;
+}
+
+@media only screen and (max-width: 760px) { 
+#tTest1 { display: none; }
+#tTest2 { display: block; }
+}
+
+
+</style>
+
+<script src="scrpts/jquery.js"></script>
+</head>
+
+<body>
+
+<div class="stats">
+touch enabled = <span id="touchMe">false</span>
+</div>
+
+<div class="stats">
+mouse enabled = <span id="mouseMe">false</span>
+</div>
+
+<div class="stats">
+touching it = <span id="usingTouch">false</span>
+</div>
+
+<div class="stats">
+using a mouse = <span id="usingMouse">false</span>
+</div>
+
+
+<div class="tTest">
+<span id="tTest1">The device you're using is wide enough to maybe not be a touchscreen.</span>
+<span id="tTest2">The device you're using is narrow enough to maybe be a touchscreen..</span>
+<br /><br /> 
+However, the moment landscape view is introduced, or if you're on a high def device, things get tricky.
+<br /><br /> 
+Furthermore, what about a touch-capable laptop, a bluetooth mouse for a tablet, or a browser window opened, but resized to be really small?
+</div>
+
+<script>
+ 
+jQuery(function($){
+
+
+var usingMouse = false;	var hasTouch = false;	
+
+$.fn.ioTester = function()
+{
+	
+
+///////// Generally frowned upon method, but detecting the actual device may sometimes be useful
+////// pretty method for doing so from: http://j.mp/1f3WNFQ	
+var the_nav_agent =
+{
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+	
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+	
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+	
+    operaMini: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+	Opera: function() {
+        return navigator.userAgent.match(/Opera Mobi/i);
+    },
+	
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+	other: function(){
+		if(navigator.userAgent.match(/mob/i))
+		{
+			return 'other mobile browser';
+		}
+	},
+	mobile: function() {
+        return (the_nav_agent.Android() || the_nav_agent.BlackBerry() || the_nav_agent.iOS() ||  the_nav_agent.operaMini() || the_nav_agent.Opera() || the_nav_agent.Windows()|| the_nav_agent.other());
+    }
+	
+}
+
+alert( the_nav_agent.mobile());
+	
+function the_device_width_test()
+{
+	if( $('#tTest').css('display') == 'none' ) {
+        $is_mobile = true;      
+    }
+}
+
+///// the 'has touch events?' method from modernizr
+///// if it returns true, then lets detect some touch events just to make sure
+function the_ontouchstart_test()
+{
+	hasTouch = 'ontouchstart' in window;
+	if(navigator.maxTouchPoints){hasTouch = true;};
+	if(hasTouch){the_touchme_test();}
+}
+
+///// the 'poke it method' from http://j.mp/18k2lx1
+function the_touchme_test()
+{
+	window.addEventListener('touchstart', function setHasTouch () {
+    isTouch = true;	
+    window.removeEventListener('touchstart', setHasTouch);}, false);
+}
+	
+	
+window.onmouseover = function(){ 
+    window.onmouseover = null;
+    document.getElementsByTagName("html")[0].className += " mouse";
+
+//// solution from stackoverflow user: http://j.mp/1hKfkv3
+}
+
+
+
+
+
+}
+
+$(window).ioTester();
+
+
+});
+
+</script>
+</body>
+</html>
